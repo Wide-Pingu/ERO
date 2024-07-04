@@ -124,7 +124,7 @@ def simulation(n, G):
     
     for (color, length) in distances:
         time = max((length/1000) / 10, time)
-        cost += cost2(length / 1000)
+        cost += cost1(length / 1000)
         
     #pos = {node: (data['x'], data['y']) for node, data in G.nodes(data=True)}
     #draw_graph(G, pos, edge_colors)
@@ -162,7 +162,7 @@ for i in sectors:
     res+= minC
     resT = max(minT, resT)
     print(f"Optimal cost for {i.split(',')[0]} is {minC} with {nC} snowplot")
-    print(f"Optimal cost for {i.split(',')[0]} is {minT} with {nT} snowplot\n")
+    print(f"Optimal time for {i.split(',')[0]} is {minT} with {nT} snowplot\n")
 
 print(f"total optimal cost: {res:.2f}")
 print(f"total optimal time for all the operations: {resT:.2f}")
