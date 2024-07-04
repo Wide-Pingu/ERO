@@ -130,6 +130,30 @@ def simulation(n, G):
     #draw_graph(G, pos, edge_colors)
     return (cost, time)
 
+def simulation2(n, G):
+    cost = 0
+    time = 0
+    sources = chooseSources(G, n)    
+    edge_colors = BFS(G, sources)
+        
+    distances = []
+        
+    for color, length in edge_colors.values():
+        i = find_color(color, distances) 
+        if i != -1:
+            d = distances[i][1] + (length)
+            del distances[i]
+            distances.append((color, d))
+        else:
+            distances.append((color, length))
+    
+    for (color, length) in distances:
+        time = max((length/1000) / 20, time)
+        cost += cost2(length / 1000)
+        
+    #pos = {node: (data['x'], data['y']) for node, data in G.nodes(data=True)}
+    #draw_graph(G, pos, edge_colors)
+    return (cost, time)
 
 color_map = ["red", "lightpink", "gold", "orchid", "olive", "gray", "magenta", "green", "blue", "yellow"]
 
@@ -138,31 +162,60 @@ sectors = [
     "Verdun, Montreal, Quebec, Canada",
     "Anjou, Montreal, Quebec, Canada",
 ]
+def res1():
+    res = 0
+    resT = 0
+    for i in sectors:
+        G = mapOfsector(i)
+        minC = 100000000000000
+        nC = 0
+        minT = 100000000000000
+        nT = 0
+        for j in range(2,11):
+            r = simulation(j, G)
+            if r[1] < 7:
+                print(f"cost for {j} snowplot: {r[0]:.2f}")
+                print(f"time for {j} snowplot: {r[1]:.2f}")
+                if r[0] < minC:
+                    minC = r[0]
+                    nC = j
+                if r[1] < minT:
+                    minT = r[1]
+                    nT = j
+        res+= minC
+        resT = max(minT, resT)
+        print(f"Optimal cost for {i.split(',')[0]} is {minC} with {nC} snowplot")
+        print(f"Optimal time for {i.split(',')[0]} is {minT} with {nT} snowplot\n")
 
+    print(f"total optimal cost: {res:.2f}")
+    print(f"total optimal time for all the operations: {resT:.2f}")
 
-res = 0
-resT = 0
-for i in sectors:
-    G = mapOfsector(i)
-    minC = 100000000000000
-    nC = 0
-    minT = 100000000000000
-    nT = 0
-    for j in range(2,11):
-        r = simulation(j, G)
-        if r[1] < 7:
-            print(f"cost for {j} snowplot: {r[0]:.2f}")
-            print(f"time for {j} snowplot: {r[1]:.2f}")
-            if r[0] < minC:
-                minC = r[0]
-                nC = j
-            if r[1] < minT:
-                minT = r[1]
-                nT = j
-    res+= minC
-    resT = max(minT, resT)
-    print(f"Optimal cost for {i.split(',')[0]} is {minC} with {nC} snowplot")
-    print(f"Optimal time for {i.split(',')[0]} is {minT} with {nT} snowplot\n")
+def res2():
+    res = 0
+    resT = 0
+    for i in sectors:
+        G = mapOfsector(i)
+        minC = 100000000000000
+        nC = 0
+        minT = 100000000000000
+        nT = 0
+        for j in range(2,11):
+            r = simulation2(j, G)
+            if r[1] < 7:
+                print(f"cost for {j} snowplot: {r[0]:.2f}")
+                print(f"time for {j} snowplot: {r[1]:.2f}")
+                if r[0] < minC:
+                    minC = r[0]
+                    nC = j
+                if r[1] < minT:
+                    minT = r[1]
+                    nT = j
+        res+= minC
+        resT = max(minT, resT)
+        print(f"Optimal cost for {i.split(',')[0]} is {minC} with {nC} snowplot")
+        print(f"Optimal time for {i.split(',')[0]} is {minT} with {nT} snowplot\n")
 
-print(f"total optimal cost: {res:.2f}")
-print(f"total optimal time for all the operations: {resT:.2f}")
+    print(f"total optimal cost: {res:.2f}")
+    print(f"total optimal time for all the operations: {resT:.2f}")
+
+res2()
